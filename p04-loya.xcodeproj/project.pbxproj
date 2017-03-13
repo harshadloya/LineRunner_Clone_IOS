@@ -509,6 +509,7 @@
 				AFD3F0B41E76BC3500605E9D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AFD3F0B51E76BC3500605E9D /* Build configuration list for PBXNativeTarget "p04-loyaTests" */ = {
 			isa = XCConfigurationList;
@@ -517,6 +518,7 @@
 				AFD3F0B71E76BC3500605E9D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AFD3F0B81E76BC3500605E9D /* Build configuration list for PBXNativeTarget "p04-loyaUITests" */ = {
 			isa = XCConfigurationList;
@@ -525,6 +527,7 @@
 				AFD3F0BA1E76BC3500605E9D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
