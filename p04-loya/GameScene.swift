@@ -26,6 +26,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var Obstacle = SKSpriteNode()
     var moveAndRemove = SKAction()
     var moveAndRemove2 = SKAction()
+    var moveAndRemoveFish1 = SKAction()
+    var moveAndRemoveFish2 = SKAction()
+    var moveAndRemoveFish3 = SKAction()
+    var moveAndRemoveFish4 = SKAction()
+    var moveAndRemoveFish5 = SKAction()
+    
     var score = Int()
     var scoreLbl = SKLabelNode()
     
@@ -166,26 +172,129 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         moveBubbles()
         
         let backgroundFish1 = SKSpriteNode(imageNamed: "fish1")
-        createFish(Fish: backgroundFish1)
-        self.addChild(backgroundFish1)
+        backgroundFish1.name = "fish1"
+        
+        let spawnFish1 = SKAction.run {
+            
+            () in
+            
+            self.createFish(Fish: backgroundFish1)
+        }
+        
+        let delayFish1 = SKAction.wait(forDuration: TimeInterval(randomValue(min: 5.0, max: 15.0)))
+        let positionFish1 = SKAction.move(to: CGPoint(x: randomValue(min:  0, max: 1000), y: randomValue(min:  0, max: 700)), duration: 20)
+        let obsSeqFish1 = SKAction.sequence([spawnFish1, delayFish1, positionFish1])
+        let createFish1Forever = SKAction.repeatForever(obsSeqFish1)
+        
+        self.run(createFish1Forever)
+        
+        let maxHeight = CGFloat(self.frame.height - backgroundFish1.position.y)
+        let maxWidth = CGFloat(self.frame.width - backgroundFish1.position.x)
+        let moveFish1 = SKAction.moveBy(x:maxWidth, y: maxHeight, duration: TimeInterval(randomValue(min: 0.01, max: 0.07)*maxHeight))
+        let removeFish1 = SKAction.removeFromParent()
+        moveAndRemoveFish1 = SKAction.sequence([moveFish1, removeFish1])
+        
 
         let backgroundFish2 = SKSpriteNode(imageNamed: "fish2")
-        createFish(Fish: backgroundFish2)
-        self.addChild(backgroundFish2)
+        backgroundFish2.name = "fish2"
+        let spawnFish2 = SKAction.run {
+            
+            () in
+            
+            self.createFish(Fish: backgroundFish2)
+        }
+        
+        let delayFish2 = SKAction.wait(forDuration: TimeInterval(randomValue(min: 5.0, max: 15.0)))
+        let positionFish2 = SKAction.move(to: CGPoint(x: randomValue(min:  0, max: 1000), y: randomValue(min:  0, max: 700)), duration: 20)
+        let obsSeqFish2 = SKAction.sequence([spawnFish2, delayFish2, positionFish2])
+        let createFish2Forever = SKAction.repeatForever(obsSeqFish2)
+        
+        self.run(createFish2Forever)
+        
+        
+        let maxHeight2 = CGFloat(self.frame.height - backgroundFish2.position.y)
+        let maxWidth2 = CGFloat(self.frame.width - backgroundFish2.position.x)
+        let moveFish2 = SKAction.moveBy(x: -maxWidth2, y: -maxHeight2, duration: TimeInterval(randomValue(min: 0.01, max: 0.07)*maxHeight2))
+        let removeFish2 = SKAction.removeFromParent()
+        moveAndRemoveFish2 = SKAction.sequence([moveFish2, removeFish2])
+        
+        
         
         let backgroundFish3 = SKSpriteNode(imageNamed: "fish3")
-        createFish(Fish: backgroundFish3)
-        self.addChild(backgroundFish3)
+        backgroundFish3.name = "fish3"
+        let spawnFish3 = SKAction.run {
+            
+            () in
+            
+            self.createFish(Fish: backgroundFish3)
+        }
+        
+        let delayFish3 = SKAction.wait(forDuration: TimeInterval(randomValue(min: 5.0, max: 15.0)))
+        let positionFish3 = SKAction.move(to: CGPoint(x: randomValue(min:  0, max: 1000), y: randomValue(min:  0, max: 700)), duration: 20)
+        let obsSeqFish3 = SKAction.sequence([spawnFish3, delayFish3, positionFish3])
+        let createFish3Forever = SKAction.repeatForever(obsSeqFish3)
+        
+        self.run(createFish3Forever)
+        
+        
+        let maxHeight3 = CGFloat(self.frame.height - backgroundFish3.position.y)
+        let maxWidth3 = CGFloat(self.frame.width - backgroundFish3.position.x)
+        let moveFish3 = SKAction.moveBy(x: maxWidth3, y: 0, duration: TimeInterval(randomValue(min: 0.01, max: 0.07)*maxHeight3))
+        let removeFish3 = SKAction.removeFromParent()
+        moveAndRemoveFish3 = SKAction.sequence([moveFish3, removeFish3])
+        
+        
         
         let backgroundFish4 = SKSpriteNode(imageNamed: "fish4")
-        createFish(Fish: backgroundFish4)
-        self.addChild(backgroundFish4)
+        //let spawnFish4 = SKAction()
+        backgroundFish4.name = "fish4"
+        //if (!backgroundFish4.action)
+        //{
+            let spawnFish4 = SKAction.run
+            {
+                () in
+                self.createFish(Fish: backgroundFish4)
+            }
+        
+        
+        let delayFish4 = SKAction.wait(forDuration: TimeInterval(randomValue(min: 10.0, max: 15.0)))
+        let positionFish4 = SKAction.move(to: CGPoint(x: randomValue(min:  0, max: 1000), y: randomValue(min:  0, max: 700)), duration: 20)
+        let obsSeqFish4 = SKAction.sequence([spawnFish4, delayFish4, positionFish4])
+        let createFish4Forever = SKAction.repeatForever(obsSeqFish4)
+        
+        self.run(createFish4Forever)
+        
+        
+        let maxHeight4 = CGFloat(self.frame.height - backgroundFish4.position.y)
+        let maxWidth4 = CGFloat(self.frame.width - backgroundFish4.position.x)
+        let moveFish4 = SKAction.moveBy(x:maxWidth4, y: 100, duration: TimeInterval(randomValue(min: 0.01, max: 0.07)*maxHeight4))
+        let removeFish4 = SKAction.removeFromParent()
+        moveAndRemoveFish4 = SKAction.sequence([moveFish4, removeFish4])
+        //}
         
         let backgroundFish5 = SKSpriteNode(imageNamed: "fish5")
-        createFish(Fish: backgroundFish5)
-        self.addChild(backgroundFish5)
+        backgroundFish5.name = "fish5"
+        let spawnFish5 = SKAction.run {
+            
+            () in
+            
+            self.createFish(Fish: backgroundFish5)
+        }
+        
+        let delayFish5 = SKAction.wait(forDuration: TimeInterval(randomValue(min: 5.0, max: 15.0)))
+        let positionFish5 = SKAction.move(to: CGPoint(x: randomValue(min:  0, max: 1000), y: randomValue(min:  0, max: 700)), duration: 20)
+        let obsSeqFish5 = SKAction.sequence([spawnFish5, delayFish5, positionFish5])
+        let createFish5Forever = SKAction.repeatForever(obsSeqFish5)
+        
+        self.run(createFish5Forever)
         
         
+        
+        let maxHeight5 = CGFloat(self.frame.height - backgroundFish5.position.y)
+        let maxWidth5 = CGFloat(self.frame.width - backgroundFish5.position.x)
+        let moveFish5 = SKAction.moveBy(x:maxWidth5, y: 0, duration: TimeInterval(randomValue(min: 0.001, max: 0.007)*maxHeight5))
+        let removeFish5 = SKAction.removeFromParent()
+        moveAndRemoveFish5 = SKAction.sequence([moveFish5, removeFish5])
         
     }
     
@@ -194,14 +303,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Fish.setScale(randomValue(min: 0.15, max: 0.30))
         Fish.position = CGPoint(x: 10 + Fish.frame.width / 2, y: Ground.frame.height + Fish.frame.height / 2)
         Fish.zPosition = 2
-        Fish.position.x = randomValue(min: Fish.position.x, max: self.frame.width - Fish.frame.width / 2)
-        Fish.position.y = randomValue(min: Fish.position.y, max: self.frame.height - Fish.frame.height / 2)
+        Fish.position.x = randomValue(min: 10, max: self.frame.width - Fish.frame.width)
+        Fish.position.y = randomValue(min: 10, max: self.frame.height - Fish.frame.height / 2)
+        
+        if(Fish.name == "fish1")
+        {
+            Fish.run(moveAndRemoveFish1)
+        }
+        else if(Fish.name == "fish2")
+        {
+            Fish.run(moveAndRemoveFish2)
+        }
+        else if(Fish.name == "fish3")
+        {
+            Fish.run(moveAndRemoveFish3)
+        }
+        else if(Fish.name == "fish4")
+        {
+            Fish.run(moveAndRemoveFish4)
+        }
+        else if(Fish.name == "fish5")
+        {
+            Fish.run(moveAndRemoveFish5)
+        }
+        
+        self.addChild(Fish)
     }
+    
     
     func createBubbles()
     {
         
-        let Background = SKNode()
         let bubbleGroup = SKNode()
         
         for _ in 1...10
@@ -215,11 +347,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             bubbleGroup.addChild(backgroundBubble)
         }
         
-        Background.addChild(bubbleGroup)
-        Background.run(moveAndRemove2)
+        //Background.addChild(bubbleGroup)
+        bubbleGroup.run(moveAndRemove2)
         
         
-        self.addChild(Background)
+        self.addChild(bubbleGroup)
     }
     
     func moveBubbles()
@@ -231,7 +363,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.createBubbles()
         }
         
-        let delay = SKAction.wait(forDuration: TimeInterval(randomValue(min: 4.1, max: 5.5)))
+        let delay = SKAction.wait(forDuration: TimeInterval(randomValue(min: 5.1, max: 5.5)))
         let obsSeq = SKAction.sequence([spawnObs, delay])
         let createBackForever = SKAction.repeatForever(obsSeq)
         
