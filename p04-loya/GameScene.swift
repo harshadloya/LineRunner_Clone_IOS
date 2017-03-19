@@ -6,6 +6,9 @@
 //  Copyright © 2017 Harshad Loya. All rights reserved.
 //
 
+//  Used Jared Davidson's Tutorial of Flappy Birds as reference to learn Swift
+//    https://youtu.be/D7ntzPFvMf0
+
 import SpriteKit
 import GameplayKit
 
@@ -141,9 +144,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let firstObj = contact.bodyA
         let secondObj = contact.bodyB
         
-        if firstObj.categoryBitMask == PCat.Score && secondObj.categoryBitMask == PCat.Runner || firstObj.categoryBitMask == PCat.Runner && secondObj.categoryBitMask == PCat.Score {
+        if firstObj.categoryBitMask == PCat.Score && secondObj.categoryBitMask == PCat.Obstacle
+        {
+            firstObj.node?.removeFromParent()
+        }
+        else if firstObj.categoryBitMask == PCat.Obstacle && secondObj.categoryBitMask == PCat.Score
+        {
+            secondObj.node?.removeFromParent()
+        }
+
+        
+        if firstObj.categoryBitMask == PCat.Score && secondObj.categoryBitMask == PCat.Runner
+        {
             score += 1
             scoreLbl.text = "\(score)"
+            firstObj.node?.removeFromParent()
+        }
+        else if firstObj.categoryBitMask == PCat.Runner && secondObj.categoryBitMask == PCat.Score
+        {
+            score += 1
+            scoreLbl.text = "\(score)"
+            secondObj.node?.removeFromParent()
         }
         
         if firstObj.categoryBitMask == PCat.Obstacle && secondObj.categoryBitMask == PCat.Runner || firstObj.categoryBitMask == PCat.Runner && secondObj.categoryBitMask == PCat.Obstacle {
@@ -161,6 +182,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             createButton()
         }
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -203,19 +225,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let scoreNode1 = SKSpriteNode(imageNamed: "dia3")
         
         scoreNode1.size = CGSize (width: 20, height: 20)
-        scoreNode1.position = CGPoint(x: self.frame.width, y: Ground.frame.height + scoreNode1.frame.height / 2)
+        scoreNode1.position = CGPoint(x: self.frame.width + 25, y: Ground.frame.height + scoreNode1.frame.height / 2)
         scoreNode1.zPosition = 3
         scoreNode1.physicsBody = SKPhysicsBody(rectangleOf: scoreNode1.size)
         scoreNode1.physicsBody?.affectedByGravity = false
-        scoreNode1.physicsBody?.isDynamic = true
+        scoreNode1.physicsBody?.isDynamic = false
         scoreNode1.physicsBody?.categoryBitMask = PCat.Score
-        scoreNode1.physicsBody?.collisionBitMask = PCat.Obstacle
-        scoreNode1.physicsBody?.contactTestBitMask = PCat.Runner
+        scoreNode1.physicsBody?.collisionBitMask = 0
+        scoreNode1.physicsBody?.contactTestBitMask = PCat.Runner | PCat.Obstacle
         
         
         scoreNode.addChild(scoreNode1)
         /*
-        Bonus Points Diamond
+        Bonus Points Diamond - not implemented
         
         let scoreNode2 = SKSpriteNode(imageNamed: "dia4")
         
@@ -239,11 +261,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         obstacle.setScale(randomValue(min: 0.15, max: 0.4))
         
-        obstacle.position = CGPoint(x: self.frame.size.width, y: Ground.frame.height + obstacle.frame.size.height / 2)
+        obstacle.position = CGPoint(x: self.frame.size.width + 25, y: Ground.frame.height + obstacle.frame.size.height / 2)
         obstacle.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: obstacle.frame.width*obstacle.xScale, height: obstacle.frame.height*obstacle.yScale))
         obstacle.physicsBody?.categoryBitMask = PCat.Obstacle
-        obstacle.physicsBody?.collisionBitMask = PCat.Runner | PCat.Score
-        obstacle.physicsBody?.contactTestBitMask = PCat.Runner
+        obstacle.physicsBody?.collisionBitMask = PCat.Runner
+        obstacle.physicsBody?.contactTestBitMask = PCat.Runner | PCat.Score
         obstacle.physicsBody?.affectedByGravity = false
         obstacle.physicsBody?.isDynamic = true
         obstacle.zPosition = 3
