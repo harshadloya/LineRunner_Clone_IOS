@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF57D7B51E7EA09E00846DB9 /* PG_Roof Runners_active.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF57D7B41E7EA09E00846DB9 /* PG_Roof Runners_active.ttf */; };
 		AFD3F0881E76BC3500605E9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD3F0871E76BC3500605E9D /* AppDelegate.swift */; };
 		AFD3F08E1E76BC3500605E9D /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD3F08D1E76BC3500605E9D /* GameScene.swift */; };
 		AFD3F0901E76BC3500605E9D /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD3F08F1E76BC3500605E9D /* GameViewController.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AF57D7B41E7EA09E00846DB9 /* PG_Roof Runners_active.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PG_Roof Runners_active.ttf"; sourceTree = "<group>"; };
 		AFD3F0841E76BC3500605E9D /* p04-loya.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "p04-loya.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFD3F0871E76BC3500605E9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AFD3F08D1E76BC3500605E9D /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		AFD3F0861E76BC3500605E9D /* p04-loya */ = {
 			isa = PBXGroup;
 			children = (
+				AF57D7B41E7EA09E00846DB9 /* PG_Roof Runners_active.ttf */,
 				AFD3F0871E76BC3500605E9D /* AppDelegate.swift */,
 				AFD3F08D1E76BC3500605E9D /* GameScene.swift */,
 				AFD3F08F1E76BC3500605E9D /* GameViewController.swift */,
@@ -236,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AFD3F0931E76BC3500605E9D /* Main.storyboard in Resources */,
+				AF57D7B51E7EA09E00846DB9 /* PG_Roof Runners_active.ttf in Resources */,
 				AFD3F0951E76BC3500605E9D /* Assets.xcassets in Resources */,
 				AFD3F0981E76BC3500605E9D /* LaunchScreen.storyboard in Resources */,
 			);

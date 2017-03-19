@@ -32,15 +32,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var moveAndRemoveFish4 = SKAction()
     var moveAndRemoveFish5 = SKAction()
     
+    
     var score = Int()
     var scoreLbl = SKLabelNode()
+    var lost = Bool()
+    var restartBtn = SKSpriteNode()
     
-    override func didMove(to view: SKView) {
+    func restartScene()
+    {
+        self.removeAllChildren()
+        self.removeAllActions()
+        lost = false
+        score = 0
+        self.isPaused = false
+        createScene()
+    }
+    
+    func createScene()
+    {
         
         self.physicsWorld.contactDelegate = self
         
         scoreLbl.position = CGPoint(x: self.frame.size.width / 2, y: self.frame.height / 2 + self.frame.height / 2.5)
         scoreLbl.text = "\(score)"
+        scoreLbl.fontName = "Roof runners active"
+        scoreLbl.zPosition = 5
         self.addChild(scoreLbl)
         
         
@@ -55,7 +71,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Ground.physicsBody?.contactTestBitMask = PCat.Runner
         Ground.physicsBody?.affectedByGravity = false
         Ground.physicsBody?.isDynamic = false
-        Ground.zPosition = 5
+        Ground.zPosition = 4
         self.addChild(Ground)
         
         //200px X 200px
@@ -63,19 +79,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Runner.size = CGSize (width: 60, height: 70)
         Runner.position = CGPoint(x: 25 + Runner.frame.size.width / 2, y: 0 + self.frame.height / 2)
         
-        Runner.physicsBody = SKPhysicsBody(circleOfRadius: Runner.frame.height / 2)
+        Runner.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: Runner.frame.width - 15, height: Runner.frame.height))
         Runner.physicsBody?.categoryBitMask = PCat.Runner
         Runner.physicsBody?.collisionBitMask = PCat.Ground | PCat.Obstacle
-        Runner.physicsBody?.contactTestBitMask = PCat.Ground | PCat.Obstacle
+        Runner.physicsBody?.contactTestBitMask = PCat.Ground | PCat.Obstacle | PCat.Score
         Runner.physicsBody?.affectedByGravity = true
         Runner.physicsBody?.isDynamic = true
         Runner.physicsBody?.allowsRotation = false
-        Runner.zPosition = 4
+        Runner.zPosition = 3
         self.addChild(Runner)
         
         
         //1334px X 750px
         let backgroundImg = SKSpriteNode(imageNamed: "back")
+        backgroundImg.name = "bgImg"
         backgroundImg.setScale(0.5)
         backgroundImg.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
         backgroundImg.zPosition = 1
@@ -97,10 +114,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.run(createObsForever)
         
-        let dist = CGFloat(self.frame.size.width)
-        let moveObs = SKAction.moveBy(x: -dist, y: 0, duration: TimeInterval(0.01*dist))
+        let dist = CGFloat(self.frame.size.width + 100)
+        let moveObs = SKAction.moveBy(x: -dist, y: 0, duration: TimeInterval(0.005*dist))
         let removeObs = SKAction.removeFromParent()
         moveAndRemove = SKAction.sequence([moveObs, removeObs])
+    }
+    
+    override func didMove(to view: SKView) {
+        
+        createScene()
+    }
+    
+    func createButton()
+    {
+        restartBtn = SKSpriteNode(imageNamed: "RstBtn")
+        restartBtn.size = CGSize(width: 100, height: 50)
+        restartBtn.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        restartBtn.zPosition = 5
+        restartBtn.setScale(0)
+        self.addChild(restartBtn)
+        
+        restartBtn.run(SKAction.scale(to: 1, duration: TimeInterval(0.5)))
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -109,50 +143,126 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstObj.categoryBitMask == PCat.Score && secondObj.categoryBitMask == PCat.Runner || firstObj.categoryBitMask == PCat.Runner && secondObj.categoryBitMask == PCat.Score {
             score += 1
-            print(score)
             scoreLbl.text = "\(score)"
         }
         
         if firstObj.categoryBitMask == PCat.Obstacle && secondObj.categoryBitMask == PCat.Runner || firstObj.categoryBitMask == PCat.Runner && secondObj.categoryBitMask == PCat.Obstacle {
             
             //Died, Game Lost Condition to be added
+            lost = true
             
+            
+            enumerateChildNodes(withName: "obsScorePair", using: ({
+                (node, error) in
+                
+                node.speed = 0
+                self.removeAllActions()
+            }))
+            
+            createButton()
         }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        Runner.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        Runner.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 100))
+        if lost == true
+        {
+            
+        }
+        else
+        {
+            Runner.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            Runner.physicsBody?.applyImpulse(CGVector(dx: 3, dy: 85))
+        }
         
+        for touch in touches
+        {
+            let touchPoint = touch.location(in: self)
+            
+            if lost == true
+            {
+                if restartBtn.contains(touchPoint)
+                {
+                    restartScene()
+                }
+            }
+        }
     }
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
     }
     
+    
     func createObstacles()
     {
-        //let obstacle = SKSpriteNode(imageNamed: "ca")
-        let obstacle = SKSpriteNode (color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), size: CGSize(width: 100, height: 100))
-        //should be 100 x 1000
-        obstacle.setScale(0.3)
-        obstacle.position = CGPoint(x: self.frame.size.width, y: Ground.frame.height + obstacle.frame.size.height / 2)
         
-        obstacle.physicsBody = SKPhysicsBody(rectangleOf: obstacle.size)
+        let scoreNode = SKNode()
+        
+        
+        let scoreNode1 = SKSpriteNode(imageNamed: "dia3")
+        
+        scoreNode1.size = CGSize (width: 20, height: 20)
+        scoreNode1.position = CGPoint(x: self.frame.width, y: Ground.frame.height + scoreNode1.frame.height / 2)
+        scoreNode1.zPosition = 3
+        scoreNode1.physicsBody = SKPhysicsBody(rectangleOf: scoreNode1.size)
+        scoreNode1.physicsBody?.affectedByGravity = false
+        scoreNode1.physicsBody?.isDynamic = true
+        scoreNode1.physicsBody?.categoryBitMask = PCat.Score
+        scoreNode1.physicsBody?.collisionBitMask = PCat.Obstacle
+        scoreNode1.physicsBody?.contactTestBitMask = PCat.Runner
+        
+        
+        scoreNode.addChild(scoreNode1)
+        /*
+        Bonus Points Diamond
+        
+        let scoreNode2 = SKSpriteNode(imageNamed: "dia4")
+        
+        scoreNode2.size = CGSize (width: 25, height: 25)
+        scoreNode2.position = CGPoint(x: scoreNode1.position.x + scoreNode2.frame.width / 2 + 20, y: Ground.frame.height + self.frame.height / 2)
+        scoreNode2.zPosition = 3
+        scoreNode2.physicsBody = SKPhysicsBody(rectangleOf: scoreNode2.size)
+        scoreNode2.physicsBody?.affectedByGravity = false
+        scoreNode2.physicsBody?.isDynamic = false
+        scoreNode2.physicsBody?.categoryBitMask = PCat.Score
+        scoreNode2.physicsBody?.collisionBitMask = 0
+        scoreNode2.physicsBody?.contactTestBitMask = PCat.Runner
+        
+        scoreNode.addChild(scoreNode2)
+        */
+        
+        let obsScorePair = SKNode()
+        obsScorePair.name = "obsScorePair"
+        //200px X 100px
+        let obstacle = SKSpriteNode(imageNamed: "rock1")
+        
+        obstacle.setScale(randomValue(min: 0.15, max: 0.4))
+        
+        obstacle.position = CGPoint(x: self.frame.size.width, y: Ground.frame.height + obstacle.frame.size.height / 2)
+        obstacle.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: obstacle.frame.width*obstacle.xScale, height: obstacle.frame.height*obstacle.yScale))
         obstacle.physicsBody?.categoryBitMask = PCat.Obstacle
-        obstacle.physicsBody?.collisionBitMask = PCat.Runner
+        obstacle.physicsBody?.collisionBitMask = PCat.Runner | PCat.Score
         obstacle.physicsBody?.contactTestBitMask = PCat.Runner
         obstacle.physicsBody?.affectedByGravity = false
-        obstacle.physicsBody?.isDynamic = false
-        obstacle.zPosition = 4
+        obstacle.physicsBody?.isDynamic = true
+        obstacle.zPosition = 3
         
-        let randomPosition = randomValue(min: 0, max: 130)
-        obstacle.position.y = obstacle.position.y + randomPosition
+        let randomObsPosition = randomValue(min: 0, max: 130)
+        obstacle.position.y = obstacle.position.y + randomObsPosition
         
-        obstacle.run(moveAndRemove)
+        let randomScoreItemPositionY = randomValue(min: 0, max: 130)
+        let randomScoreItemPositionX = randomValue(min: 0, max: 100)
+        scoreNode.position.x = scoreNode.position.x + randomScoreItemPositionX
+        scoreNode.position.y = scoreNode.position.y + randomScoreItemPositionY
         
-        self.addChild(obstacle)
+        obsScorePair.addChild(obstacle)
+        
+        obsScorePair.addChild(scoreNode)
+        
+        obsScorePair.run(moveAndRemove)
+        
+        self.addChild(obsScorePair)
         
     }
     
@@ -204,7 +314,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.createFish(Fish: backgroundFish2)
         }
         
-        let delayFish2 = SKAction.wait(forDuration: TimeInterval(randomValue(min: 5.0, max: 15.0)))
+        let delayFish2 = SKAction.wait(forDuration: TimeInterval(randomValue(min: 7.0, max: 15.0)))
         let positionFish2 = SKAction.move(to: CGPoint(x: randomValue(min:  0, max: 1000), y: randomValue(min:  0, max: 700)), duration: 20)
         let obsSeqFish2 = SKAction.sequence([spawnFish2, delayFish2, positionFish2])
         let createFish2Forever = SKAction.repeatForever(obsSeqFish2)
@@ -214,7 +324,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let maxHeight2 = CGFloat(self.frame.height - backgroundFish2.position.y)
         let maxWidth2 = CGFloat(self.frame.width - backgroundFish2.position.x)
-        let moveFish2 = SKAction.moveBy(x: -maxWidth2, y: -maxHeight2, duration: TimeInterval(randomValue(min: 0.01, max: 0.07)*maxHeight2))
+        let moveFish2 = SKAction.moveBy(x: -maxWidth2, y: -maxHeight2+100, duration: TimeInterval(randomValue(min: 0.01, max: 0.07)*maxHeight2))
         let removeFish2 = SKAction.removeFromParent()
         moveAndRemoveFish2 = SKAction.sequence([moveFish2, removeFish2])
         
@@ -246,20 +356,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         let backgroundFish4 = SKSpriteNode(imageNamed: "fish4")
-        //let spawnFish4 = SKAction()
         backgroundFish4.name = "fish4"
-        //if (!backgroundFish4.action)
-        //{
-            let spawnFish4 = SKAction.run
-            {
-                () in
-                self.createFish(Fish: backgroundFish4)
-            }
+        let spawnFish4 = SKAction.run
+        {
+            () in
+            self.createFish(Fish: backgroundFish4)
+        }
         
         
         let delayFish4 = SKAction.wait(forDuration: TimeInterval(randomValue(min: 10.0, max: 15.0)))
         let positionFish4 = SKAction.move(to: CGPoint(x: randomValue(min:  0, max: 1000), y: randomValue(min:  0, max: 700)), duration: 20)
+        
         let obsSeqFish4 = SKAction.sequence([spawnFish4, delayFish4, positionFish4])
+        
         let createFish4Forever = SKAction.repeatForever(obsSeqFish4)
         
         self.run(createFish4Forever)
@@ -270,7 +379,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let moveFish4 = SKAction.moveBy(x:maxWidth4, y: 100, duration: TimeInterval(randomValue(min: 0.01, max: 0.07)*maxHeight4))
         let removeFish4 = SKAction.removeFromParent()
         moveAndRemoveFish4 = SKAction.sequence([moveFish4, removeFish4])
-        //}
         
         let backgroundFish5 = SKSpriteNode(imageNamed: "fish5")
         backgroundFish5.name = "fish5"
@@ -300,10 +408,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createFish(Fish: SKSpriteNode)
     {
-        Fish.setScale(randomValue(min: 0.15, max: 0.30))
-        Fish.position = CGPoint(x: 10 + Fish.frame.width / 2, y: Ground.frame.height + Fish.frame.height / 2)
+        Fish.setScale(randomValue(min: 0.05, max: 0.25))
+        Fish.position = CGPoint(x: -Fish.frame.width / 2, y: Ground.frame.height + Fish.frame.height / 2)
         Fish.zPosition = 2
-        Fish.position.x = randomValue(min: 10, max: self.frame.width - Fish.frame.width)
+        //Fish.position.x = randomValue(min: 10, max: self.frame.width - Fish.frame.width)
         Fish.position.y = randomValue(min: 10, max: self.frame.height - Fish.frame.height / 2)
         
         if(Fish.name == "fish1")
@@ -347,7 +455,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             bubbleGroup.addChild(backgroundBubble)
         }
         
-        //Background.addChild(bubbleGroup)
         bubbleGroup.run(moveAndRemove2)
         
         
